@@ -36,4 +36,4 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: pipfilelock
-      - run: semgrep ci
+      - run: semgrep ci --verbose --include=pipfilelock/Pipfile.lock
