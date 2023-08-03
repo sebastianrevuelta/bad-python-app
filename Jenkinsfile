@@ -39,8 +39,8 @@ pipeline {
               sh '''docker pull returntocorp/semgrep && \
               docker run \
               -e SEMGREP_APP_TOKEN=$SEMGREP_APP_TOKEN \
-              -e SEMGREP_PR_ID=env.ghprbPullId \
-              -e SEMGREP_BASELINE_REF="main" \
+              -e SEMGREP_PR_ID=${env.ghprbPullId} \
+              -e SEMGREP_BASELINE_REF="origin/main" \
               -v "$(pwd):$(pwd)" --workdir $(pwd) \
               returntocorp/semgrep semgrep ci '''
             }
