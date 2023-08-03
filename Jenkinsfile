@@ -31,13 +31,29 @@ pipeline {
       
       stage('Semgrep-Scan') {
         steps {
-            sh '''echo SEMGREP_PR_ID '''
-            sh '''echo ${SEMGREP_PR_ID}'''
-            sh '''docker pull returntocorp/semgrep && \
-            docker run \
-            -e SEMGREP_APP_TOKEN=$SEMGREP_APP_TOKEN \
-            -v "$(pwd):$(pwd)" --workdir $(pwd) \
-            returntocorp/semgrep semgrep ci '''
+            if (${SEMGREP_PR_ID} != null) {
+              sh '''echo *************'''
+              sh '''echo Diff Scan '''
+              sh '''echo *************'''
+              sh '''echo ${SEMGREP_PR_ID}'''
+              sh '''docker pull returntocorp/semgrep && \
+              docker run \
+              -e SEMGREP_APP_TOKEN=$SEMGREP_APP_TOKEN \
+              -e SEMGREP_PR_ID=$SEMGREP_PR_ID \
+              -e SEMGREP_BASELINE_REF="main" \
+              -v "$(pwd):$(pwd)" --workdir $(pwd) \
+              returntocorp/semgrep semgrep ci '''
+            }
+            else {
+              sh '''echo *************'''
+              sh '''echo Full Scan '''
+              sh '''echo *************'''
+              sh '''docker pull returntocorp/semgrep && \
+              docker run \
+              -e SEMGREP_APP_TOKEN=$SEMGREP_APP_TOKEN \
+              -v "$(pwd):$(pwd)" --workdir $(pwd) \
+              returntocorp/semgrep semgrep ci '''
+            }
       }
     }
   }
