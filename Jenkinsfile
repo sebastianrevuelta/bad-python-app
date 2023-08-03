@@ -32,7 +32,7 @@ pipeline {
       stage('Semgrep-Scan') {
         steps {
           script {
-            if (${env.CHANGE_ID} != null) {
+            if (env.CHANGE_ID != null) {
               sh '''echo *************'''
               sh '''echo Diff Scan '''
               sh '''echo *************'''
