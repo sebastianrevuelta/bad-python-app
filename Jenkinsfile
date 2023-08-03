@@ -32,11 +32,10 @@ pipeline {
       stage('Semgrep-Scan') {
         steps {
           script {
-            if (${SEMGREP_PR_ID} != null) {
+            if (${env.CHANGE_ID} != null) {
               sh '''echo *************'''
               sh '''echo Diff Scan '''
               sh '''echo *************'''
-              sh '''echo ${SEMGREP_PR_ID}'''
               sh '''docker pull returntocorp/semgrep && \
               docker run \
               -e SEMGREP_APP_TOKEN=$SEMGREP_APP_TOKEN \
