@@ -20,6 +20,15 @@ pipeline {
       SEMGREP_PR_ID = "${env.CHANGE_ID}"
     }
     stages {
+      stage('Print Environment Variables') {
+            steps {
+                script {
+                    // Execute a shell command to print all environment variables
+                    sh 'printenv'
+                }
+            }
+      }
+      
       stage('Semgrep-Scan') {
         steps {
             sh '''echo SEMGREP_PR_ID '''
