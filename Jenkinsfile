@@ -1,5 +1,9 @@
 pipeline {
   agent any
+    triggers {
+        // Trigger the pipeline on pull request events
+        githubPullRequest()
+    }
     environment {
       // The following variable is required for a Semgrep Cloud Platform-connected scan:
       SEMGREP_APP_TOKEN = credentials('SEMGREP_APP_TOKEN')
