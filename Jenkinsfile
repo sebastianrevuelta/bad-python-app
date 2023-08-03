@@ -31,6 +31,7 @@ pipeline {
       
       stage('Semgrep-Scan') {
         steps {
+          script {
             if (${SEMGREP_PR_ID} != null) {
               sh '''echo *************'''
               sh '''echo Diff Scan '''
@@ -54,6 +55,7 @@ pipeline {
               -v "$(pwd):$(pwd)" --workdir $(pwd) \
               returntocorp/semgrep semgrep ci '''
             }
+          }
       }
     }
   }
