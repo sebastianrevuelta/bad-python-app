@@ -17,7 +17,7 @@ pipeline {
       SEMGREP_BRANCH = "${GIT_BRANCH}"
       // SEMGREP_REPO_NAME = env.GIT_URL.replaceFirst(/^https:\/\/github.com\/(.*).git$/, '$1')
       SEMGREP_REPO_URL = env.GIT_URL.replaceFirst(/^(.*).git$/,'$1')
-      SEMGREP_PR_ID = "${env.CHANGE_ID}"
+      SEMGREP_PR_ID = "${env.ghprbPullId}"
     }
     stages {
       stage('Print Environment Variables') {
@@ -33,21 +33,17 @@ pipeline {
         steps {
           script {
             if (env.ghprbPullId != null) {
-              sh '''echo *************'''
               sh '''echo Diff Scan '''
-              sh '''echo *************'''
               sh '''docker pull returntocorp/semgrep && \
               docker run \
               -e SEMGREP_APP_TOKEN=$SEMGREP_APP_TOKEN \
-              -e SEMGREP_PR_ID=${env.ghprbPullId} \
+              -e SEMGREP_PR_ID=$SEMGREP_PR_ID \
               -e SEMGREP_BASELINE_REF="origin/main" \
               -v "$(pwd):$(pwd)" --workdir $(pwd) \
               returntocorp/semgrep semgrep ci '''
             }
             else {
-              sh '''echo *************'''
               sh '''echo Full Scan '''
-              sh '''echo *************'''
               sh '''docker pull returntocorp/semgrep && \
               docker run \
               -e SEMGREP_APP_TOKEN=$SEMGREP_APP_TOKEN \
