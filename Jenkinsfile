@@ -24,7 +24,7 @@ pipeline {
             steps {
                 script {
                     // Execute a shell command to print all environment variables
-                    sh 'printenv'
+                    sh 'printenv | sort'
                 }
             }
       }
@@ -32,14 +32,14 @@ pipeline {
       stage('Semgrep-Scan') {
         steps {
           script {
-            if (env.CHANGE_ID != null) {
+            if (env.ghprbPullId != null) {
               sh '''echo *************'''
               sh '''echo Diff Scan '''
               sh '''echo *************'''
               sh '''docker pull returntocorp/semgrep && \
               docker run \
               -e SEMGREP_APP_TOKEN=$SEMGREP_APP_TOKEN \
-              -e SEMGREP_PR_ID=$SEMGREP_PR_ID \
+              -e SEMGREP_PR_ID=env.ghprbPullId \
               -e SEMGREP_BASELINE_REF="main" \
               -v "$(pwd):$(pwd)" --workdir $(pwd) \
               returntocorp/semgrep semgrep ci '''
